@@ -6,46 +6,30 @@
   :root {
     --background: 220 20% 97%;
     --foreground: 220 30% 10%;
-
     --card: 0 0% 100%;
     --card-foreground: 220 30% 10%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 220 30% 10%;
-
     --primary: 220 70% 45%;
     --primary-foreground: 0 0% 100%;
-
     --secondary: 220 15% 92%;
     --secondary-foreground: 220 30% 20%;
-
     --muted: 220 15% 94%;
     --muted-foreground: 220 10% 50%;
-
     --accent: 220 60% 95%;
     --accent-foreground: 220 70% 35%;
-
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-
     --success: 152 60% 40%;
     --success-foreground: 0 0% 100%;
-
     --warning: 38 92% 50%;
     --warning-foreground: 38 90% 10%;
-
     --danger: 0 72% 51%;
     --danger-foreground: 0 0% 100%;
-
     --border: 220 15% 88%;
     --input: 220 15% 88%;
     --ring: 220 70% 45%;
-
     --radius: 0.75rem;
-
-    --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
-    --font-mono: 'IBM Plex Mono', monospace;
-
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -91,20 +75,13 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
-  }
-}
-
-@layer components {
-  .status-badge {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase;
+    @apply bg-background text-foreground;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
   }
 }

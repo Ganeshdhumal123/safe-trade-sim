@@ -7,14 +7,104 @@ const DEMO_USER = {
 
 const KNOWN_DEVICE_ID = "DEVICE-XK7-2024";
 
+export interface TraderData {
+  name: string;
+  verified: boolean;
+  pan?: string;
+  aadhaar?: string;
+  bankAccount?: string;
+  ifsc?: string;
+}
+
 // Trader database
-export const TRADERS: Record<string, { name: string; verified: boolean }> = {
-  T1: { name: "Global Payments Corp", verified: true },
+const DEFAULT_TRADERS: Record<string, TraderData> = {
+  T1: { name: "Global Payments Corp", verified: true, pan: "ABCDE1234F", aadhaar: "123456789012", bankAccount: "1234567890", ifsc: "SBIN0001234" },
   T2: { name: "QuickCash Ltd", verified: false },
-  T3: { name: "SecureTrade Inc", verified: true },
+  T3: { name: "SecureTrade Inc", verified: true, pan: "XYZAB5678C", aadhaar: "987654321098", bankAccount: "0987654321", ifsc: "HDFC0005678" },
   T4: { name: "OffshoreX Partners", verified: false },
-  T5: { name: "National Bank Services", verified: true },
+  T5: { name: "National Bank Services", verified: true, pan: "MNOPQ9012D", aadhaar: "456789012345", bankAccount: "5678901234", ifsc: "ICIC0009012" },
 };
+
+function loadTraders(): Record<string, TraderData> {
+  const stored = localStorage.getItem("traders_db");
+  if (stored) return JSON.parse(stored);
+  return { ...DEFAULT_TRADERS };
+}
+
+function saveTraders(traders: Record<string, TraderData>) {
+  localStorage.setItem("traders_db", JSON.stringify(traders));
+}
+
+export function getTraders(): Record<string, TraderData> {
+  return loadTraders();
+}
+
+// PAN: 5 letters, 4 digits, 1 letter
+function isValidPAN(pan: string): boolean {
+  return /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan.toUpperCase());
+}
+
+// Aadhaar: 12 digits
+function isValidAadhaar(aadhaar: string): boolean {
+  return /^\d{12}$/.test(aadhaar);
+}
+
+// Bank account: 9-18 digits
+function isValidBankAccount(acc: string): boolean {
+  return /^\d{9,18}$/.test(acc);
+}
+
+// IFSC: 4 letters, 0, 6 alphanumeric
+function isValidIFSC(ifsc: string): boolean {
+  return /^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc.toUpperCase());
+}
+
+export interface RegisterTraderResult {
+  success: boolean;
+  message: string;
+  traderId?: string;
+  errors?: string[];
+}
+
+export function registerTrader(
+  name: string,
+  pan: string,
+  aadhaar: string,
+  bankAccount: string,
+  ifsc: string
+): RegisterTraderResult {
+  const errors: string[] = [];
+
+  if (!name.trim()) errors.push("Trader name is required");
+  if (!isValidPAN(pan)) errors.push("Invalid PAN format (e.g. ABCDE1234F)");
+  if (!isValidAadhaar(aadhaar)) errors.push("Invalid Aadhaar (must be 12 digits)");
+  if (!isValidBankAccount(bankAccount)) errors.push("Invalid bank account (9-18 digits)");
+  if (!isValidIFSC(ifsc)) errors.push("Invalid IFSC code (e.g. SBIN0001234)");
+
+  if (errors.length > 0) {
+    return { success: false, message: "Validation failed. Trader is NOT verified.", errors };
+  }
+
+  const traders = loadTraders();
+  const nextId = `T${Object.keys(traders).length + 1}`;
+
+  traders[nextId] = {
+    name: name.trim(),
+    verified: true,
+    pan: pan.toUpperCase(),
+    aadhaar,
+    bankAccount,
+    ifsc: ifsc.toUpperCase(),
+  };
+
+  saveTraders(traders);
+
+  return {
+    success: true,
+    message: `✅ Trader "${name}" registered & verified as ${nextId}`,
+    traderId: nextId,
+  };
+}
 
 export type RiskLevel = "low" | "medium" | "high";
 

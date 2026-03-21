@@ -1,8 +1,9 @@
-import { TRADERS } from "@/lib/banking";
+import { getTraders } from "@/lib/banking";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BadgeCheck, BadgeX, Database } from "lucide-react";
 
 export default function TraderDirectory() {
+  const traders = getTraders();
   return (
     <Card className="animate-fade-in shadow-lg border-primary/5">
       <CardHeader>
@@ -18,7 +19,7 @@ export default function TraderDirectory() {
       </CardHeader>
       <CardContent>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {Object.entries(TRADERS).map(([id, trader]) => (
+          {Object.entries(traders).map(([id, trader]) => (
             <div key={id} className={`p-4 rounded-xl border flex items-center gap-3 ${
               trader.verified ? "bg-success/5 border-success/15" : "bg-danger/5 border-danger/15"
             }`}>

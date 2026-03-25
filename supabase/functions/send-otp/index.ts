@@ -48,7 +48,7 @@ serve(async (req) => {
     });
 
     await client.send({
-      from: gmailUser,
+      from: { address: gmailUser, name: "SafeTrade" },
       to: email,
       subject: "SafeTrade OTP Verification",
       content: `Your OTP is ${otp}`,

@@ -12,6 +12,7 @@ export interface Investment {
   traderName: string;
   amount: number;
   date: string;
+  type: "invest" | "withdraw";
 }
 
 interface InvestmentPanelProps {

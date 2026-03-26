@@ -23,6 +23,8 @@ export default function AdminLogin() {
     setMessage({ text: result.message, type: result.success ? "success" : "error" });
     if (result.success) {
       localStorage.setItem("user_role", "admin");
+      localStorage.setItem("user_name", "Alex Morgan");
+      localStorage.setItem("user_email", email);
       setTimeout(() => navigate("/admin-dashboard"), 800);
     }
   };

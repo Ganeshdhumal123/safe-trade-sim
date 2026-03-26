@@ -19,19 +19,21 @@ interface InvestmentChartProps {
 }
 
 export default function InvestmentChart({ investments }: InvestmentChartProps) {
-  // Aggregate by trader
+  // Aggregate by trader (net balance: invest - withdraw)
   const traderMap: Record<string, { name: string; total: number }> = {};
   investments.forEach(inv => {
     if (!traderMap[inv.traderId]) {
       traderMap[inv.traderId] = { name: inv.traderName, total: 0 };
     }
-    traderMap[inv.traderId].total += inv.amount;
+    traderMap[inv.traderId].total += inv.type === "withdraw" ? -inv.amount : inv.amount;
   });
 
-  const data = Object.entries(traderMap).map(([id, { name, total }]) => ({
-    name: `${name} (${id})`,
-    value: total,
-  }));
+  const data = Object.entries(traderMap)
+    .filter(([, { total }]) => total > 0)
+    .map(([id, { name, total }]) => ({
+      name: `${name} (${id})`,
+      value: total,
+    }));
 
   if (data.length === 0) {
     return (

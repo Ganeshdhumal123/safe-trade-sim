@@ -5,6 +5,7 @@ import ProfileDropdown from "@/components/ProfileDropdown";
 import TraderCheckPanel from "@/components/TraderCheckPanel";
 import TraderDirectory from "@/components/TraderDirectory";
 import InvestmentPanel, { type Investment } from "@/components/InvestmentPanel";
+import WithdrawPanel from "@/components/WithdrawPanel";
 import InvestmentChart from "@/components/InvestmentChart";
 import TransactionHistory from "@/components/TransactionHistory";
 import Footer from "@/components/Footer";
@@ -29,8 +30,8 @@ export default function UserDashboard() {
     saveInvestments(investments);
   }, [investments]);
 
-  const handleInvest = (investment: Investment) => {
-    setInvestments(prev => [...prev, investment]);
+  const handleTransaction = (transaction: Investment) => {
+    setInvestments(prev => [...prev, transaction]);
   };
 
   const handleLogout = () => {
@@ -59,9 +60,10 @@ export default function UserDashboard() {
 
       <main className="container mx-auto px-4 py-8 space-y-8 flex-1">
         <div className="grid gap-8 lg:grid-cols-2">
-          <InvestmentPanel onInvest={handleInvest} />
-          <InvestmentChart investments={investments} />
+          <InvestmentPanel onInvest={handleTransaction} />
+          <WithdrawPanel investments={investments} onWithdraw={handleTransaction} />
         </div>
+        <InvestmentChart investments={investments} />
         <TransactionHistory investments={investments} />
         <TraderCheckPanel />
         <TraderDirectory />

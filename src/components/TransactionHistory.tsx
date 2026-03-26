@@ -36,6 +36,7 @@ export default function TransactionHistory({ investments }: TransactionHistoryPr
                 <TableRow>
                   <TableHead>Date</TableHead>
                   <TableHead>Transaction ID</TableHead>
+                  <TableHead>Type</TableHead>
                   <TableHead>Trader</TableHead>
                   <TableHead className="text-right">Amount</TableHead>
                 </TableRow>
@@ -48,11 +49,20 @@ export default function TransactionHistory({ investments }: TransactionHistoryPr
                     </TableCell>
                     <TableCell className="font-mono text-xs">{inv.id}</TableCell>
                     <TableCell>
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                        inv.type === "withdraw" ? "bg-destructive/10 text-destructive" : "bg-success/10 text-success"
+                      }`}>
+                        {inv.type === "withdraw" ? "Withdraw" : "Invest"}
+                      </span>
+                    </TableCell>
+                    <TableCell>
                       <span className="font-medium">{inv.traderName}</span>
                       <span className="text-muted-foreground text-xs ml-1">({inv.traderId})</span>
                     </TableCell>
-                    <TableCell className="text-right font-mono font-semibold text-success">
-                      ${inv.amount.toLocaleString()}
+                    <TableCell className={`text-right font-mono font-semibold ${
+                      inv.type === "withdraw" ? "text-destructive" : "text-success"
+                    }`}>
+                      {inv.type === "withdraw" ? "-" : "+"}${inv.amount.toLocaleString()}
                     </TableCell>
                   </TableRow>
                 ))}

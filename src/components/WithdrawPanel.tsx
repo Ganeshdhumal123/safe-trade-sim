@@ -3,62 +3,60 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { getTraders } from "@/lib/banking";
-import { TrendingUp } from "lucide-react";
+import { ArrowDownToLine } from "lucide-react";
+import type { Investment } from "@/components/InvestmentPanel";
 
-export interface Investment {
-  id: string;
-  traderId: string;
-  traderName: string;
-  amount: number;
-  date: string;
-  type: "invest" | "withdraw";
+interface WithdrawPanelProps {
+  investments: Investment[];
+  onWithdraw: (withdrawal: Investment) => void;
 }
 
-interface InvestmentPanelProps {
-  onInvest: (investment: Investment) => void;
-}
-
-export default function InvestmentPanel({ onInvest }: InvestmentPanelProps) {
+export default function WithdrawPanel({ investments, onWithdraw }: WithdrawPanelProps) {
   const [amount, setAmount] = useState("");
   const [traderId, setTraderId] = useState("");
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
-  const handleInvest = () => {
+  const getBalanceByTrader = (id: string) => {
+    return investments
+      .filter(inv => inv.traderId === id)
+      .reduce((sum, inv) => sum + (inv.type === "invest" ? inv.amount : -inv.amount), 0);
+  };
+
+  const handleWithdraw = () => {
     const amt = parseFloat(amount);
     if (isNaN(amt) || amt <= 0) {
       setMessage({ text: "Please enter a valid amount.", type: "error" });
       return;
     }
-    if (!traderId.trim()) {
+    const id = traderId.trim().toUpperCase();
+    if (!id) {
       setMessage({ text: "Please enter a Trader ID.", type: "error" });
       return;
     }
 
-    const traders = getTraders();
-    const id = traderId.toUpperCase();
-    const trader = traders[id];
-
-    if (!trader) {
-      setMessage({ text: `Trader "${id}" not found.`, type: "error" });
+    const balance = getBalanceByTrader(id);
+    if (balance <= 0) {
+      setMessage({ text: `No investments found with trader "${id}".`, type: "error" });
       return;
     }
-    if (!trader.verified) {
-      setMessage({ text: `Trader "${trader.name}" is not verified. Cannot invest.`, type: "error" });
+    if (amt > balance) {
+      setMessage({ text: `Insufficient balance. Available: $${balance.toLocaleString()}`, type: "error" });
       return;
     }
 
-    const investment: Investment = {
-      id: `INV-${Date.now()}`,
+    const traderName = investments.find(inv => inv.traderId === id)?.traderName || id;
+
+    const withdrawal: Investment = {
+      id: `WDR-${Date.now()}`,
       traderId: id,
-      traderName: trader.name,
+      traderName,
       amount: amt,
       date: new Date().toISOString(),
-      type: "invest",
+      type: "withdraw",
     };
 
-    onInvest(investment);
-    setMessage({ text: `✅ Invested $${amt.toLocaleString()} with ${trader.name}`, type: "success" });
+    onWithdraw(withdrawal);
+    setMessage({ text: `✅ Withdrew $${amt.toLocaleString()} from ${traderName}`, type: "success" });
     setAmount("");
     setTraderId("");
     setTimeout(() => setMessage(null), 3000);
@@ -68,21 +66,21 @@ export default function InvestmentPanel({ onInvest }: InvestmentPanelProps) {
     <Card className="animate-fade-in shadow-lg border-primary/5">
       <CardHeader>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-primary" />
+          <div className="w-10 h-10 rounded-xl bg-destructive/10 flex items-center justify-center">
+            <ArrowDownToLine className="w-5 h-5 text-destructive" />
           </div>
           <div>
-            <CardTitle>Invest with Trader</CardTitle>
-            <CardDescription>Enter amount and trader ID to invest</CardDescription>
+            <CardTitle>Withdraw Funds</CardTitle>
+            <CardDescription>Withdraw from your trader investments</CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
-            <Label htmlFor="invest-amount">Amount ($)</Label>
+            <Label htmlFor="withdraw-amount">Amount ($)</Label>
             <Input
-              id="invest-amount"
+              id="withdraw-amount"
               type="number"
               placeholder="0.00"
               value={amount}
@@ -90,9 +88,9 @@ export default function InvestmentPanel({ onInvest }: InvestmentPanelProps) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="invest-trader">Trader ID</Label>
+            <Label htmlFor="withdraw-trader">Trader ID</Label>
             <Input
-              id="invest-trader"
+              id="withdraw-trader"
               placeholder="e.g. T1"
               value={traderId}
               onChange={e => setTraderId(e.target.value)}
@@ -101,8 +99,8 @@ export default function InvestmentPanel({ onInvest }: InvestmentPanelProps) {
           </div>
         </div>
 
-        <Button onClick={handleInvest} className="w-full gap-2" size="lg">
-          <TrendingUp className="h-4 w-4" /> Invest Now
+        <Button onClick={handleWithdraw} variant="destructive" className="w-full gap-2" size="lg">
+          <ArrowDownToLine className="h-4 w-4" /> Withdraw
         </Button>
 
         {message && (

@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "./pages/Home";
 import AdminLogin from "./pages/AdminLogin";
 import UserLogin from "./pages/UserLogin";
+import UserSignup from "./pages/UserSignup";
 import AdminDashboard from "./pages/AdminDashboard";
 import UserDashboard from "./pages/UserDashboard";
 import TraderLogin from "./pages/TraderLogin";
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/" element={<Home />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/user-login" element={<UserLogin />} />
+          <Route path="/user-signup" element={<UserSignup />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/user-dashboard" element={<UserDashboard />} />
           <Route path="/trader-login" element={<TraderLogin />} />

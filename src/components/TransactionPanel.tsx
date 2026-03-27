@@ -41,7 +41,7 @@ export default function TransactionPanel() {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
-            <Label htmlFor="amount">Amount ($)</Label>
+            <Label htmlFor="amount">Amount (₹)</Label>
             <Input id="amount" type="number" placeholder="0.00" value={amount} onChange={e => setAmount(e.target.value)} />
           </div>
           <div className="space-y-2">

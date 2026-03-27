@@ -76,6 +76,35 @@ export default function WithdrawPanel({ investments, onWithdraw }: WithdrawPanel
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
+        {(() => {
+          const balances: { id: string; name: string; balance: number }[] = [];
+          const seen = new Set<string>();
+          investments.forEach(inv => { if (!seen.has(inv.traderId)) seen.add(inv.traderId); });
+          seen.forEach(id => {
+            const bal = investments
+              .filter(inv => inv.traderId === id)
+              .reduce((sum, inv) => sum + (inv.type === "invest" ? inv.amount : -inv.amount), 0);
+            if (bal > 0) {
+              const name = investments.find(inv => inv.traderId === id)?.traderName || id;
+              balances.push({ id, name, balance: bal });
+            }
+          });
+          return balances.length > 0 ? (
+            <div className="p-3 rounded-lg bg-muted/50 space-y-1">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">Available Balances:</p>
+              {balances.map(b => (
+                <div key={b.id} className="flex justify-between text-sm">
+                  <span className="font-mono text-muted-foreground">{b.id} — {b.name}</span>
+                  <span className="font-semibold text-success">${b.balance.toLocaleString()}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-3 rounded-lg bg-muted/50 text-sm text-muted-foreground text-center">
+              No investments yet. Invest first to withdraw.
+            </div>
+          );
+        })()}
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
             <Label htmlFor="withdraw-amount">Amount ($)</Label>

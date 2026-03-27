@@ -40,7 +40,7 @@ export default function WithdrawPanel({ investments, onWithdraw }: WithdrawPanel
       return;
     }
     if (amt > balance) {
-      setMessage({ text: `Insufficient balance. Available: $${balance.toLocaleString()}`, type: "error" });
+      setMessage({ text: `Insufficient balance. Available: ₹${balance.toLocaleString()}`, type: "error" });
       return;
     }
 
@@ -56,7 +56,7 @@ export default function WithdrawPanel({ investments, onWithdraw }: WithdrawPanel
     };
 
     onWithdraw(withdrawal);
-    setMessage({ text: `✅ Withdrew $${amt.toLocaleString()} from ${traderName}`, type: "success" });
+    setMessage({ text: `✅ Withdrew ₹${amt.toLocaleString()} from ${traderName}`, type: "success" });
     setAmount("");
     setTraderId("");
     setTimeout(() => setMessage(null), 3000);
@@ -95,7 +95,7 @@ export default function WithdrawPanel({ investments, onWithdraw }: WithdrawPanel
               {balances.map(b => (
                 <div key={b.id} className="flex justify-between text-sm">
                   <span className="font-mono text-muted-foreground">{b.id} — {b.name}</span>
-                  <span className="font-semibold text-success">${b.balance.toLocaleString()}</span>
+                  <span className="font-semibold text-success">₹{b.balance.toLocaleString()}</span>
                 </div>
               ))}
             </div>
@@ -107,7 +107,7 @@ export default function WithdrawPanel({ investments, onWithdraw }: WithdrawPanel
         })()}
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
-            <Label htmlFor="withdraw-amount">Amount ($)</Label>
+            <Label htmlFor="withdraw-amount">Amount (₹)</Label>
             <Input
               id="withdraw-amount"
               type="number"

@@ -58,7 +58,7 @@ export default function InvestmentPanel({ onInvest }: InvestmentPanelProps) {
     };
 
     onInvest(investment);
-    setMessage({ text: `✅ Invested $${amt.toLocaleString()} with ${trader.name}`, type: "success" });
+    setMessage({ text: `✅ Invested ₹${amt.toLocaleString()} with ${trader.name}`, type: "success" });
     setAmount("");
     setTraderId("");
     setTimeout(() => setMessage(null), 3000);
@@ -80,7 +80,7 @@ export default function InvestmentPanel({ onInvest }: InvestmentPanelProps) {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
-            <Label htmlFor="invest-amount">Amount ($)</Label>
+            <Label htmlFor="invest-amount">Amount (₹)</Label>
             <Input
               id="invest-amount"
               type="number"

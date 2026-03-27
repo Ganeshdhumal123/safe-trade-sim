@@ -62,7 +62,7 @@ export default function TransactionHistory({ investments }: TransactionHistoryPr
                     <TableCell className={`text-right font-mono font-semibold ${
                       inv.type === "withdraw" ? "text-destructive" : "text-success"
                     }`}>
-                      {inv.type === "withdraw" ? "-" : "+"}${inv.amount.toLocaleString()}
+                      {inv.type === "withdraw" ? "-" : "+"}₹{inv.amount.toLocaleString()}
                     </TableCell>
                   </TableRow>
                 ))}

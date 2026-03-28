@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { UserPlus, Fingerprint, Monitor, Globe, Maximize } from "lucide-react";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 import { generateDeviceId, getDeviceInfo } from "@/lib/deviceId";
 
 export default function UserSignup() {
@@ -63,6 +64,7 @@ export default function UserSignup() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Navbar />
       <div className="flex-1 flex items-center justify-center p-4">
         <Card className="w-full max-w-md animate-fade-in shadow-xl border-primary/10">
           <CardHeader className="text-center space-y-3">

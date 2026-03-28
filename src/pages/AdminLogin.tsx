@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { login, initDemoUser } from "@/lib/banking";
 import { Shield, LogIn, Fingerprint, ArrowLeft } from "lucide-react";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 import { useEffect } from "react";
 
 export default function AdminLogin() {
@@ -31,6 +32,7 @@ export default function AdminLogin() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Navbar />
       <div className="flex-1 flex items-center justify-center p-4">
         <Card className="w-full max-w-md animate-fade-in shadow-xl border-primary/10">
           <CardHeader className="text-center space-y-3">

@@ -8,6 +8,7 @@ import { initDemoUser } from "@/lib/banking";
 import { generateDeviceId, getDeviceInfo } from "@/lib/deviceId";
 import { User, LogIn, ArrowLeft, Fingerprint, Monitor, Globe, Maximize } from "lucide-react";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 export default function UserLogin() {
   const navigate = useNavigate();
@@ -67,6 +68,7 @@ export default function UserLogin() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Navbar />
       <div className="flex-1 flex items-center justify-center p-4">
         <Card className="w-full max-w-md animate-fade-in shadow-xl border-primary/10">
           <CardHeader className="text-center space-y-3">

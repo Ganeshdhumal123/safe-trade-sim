@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Briefcase, LogIn, ArrowLeft } from "lucide-react";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 const DEMO_TRADERS = [
   { email: "trader@bank.com", password: "trader1234", name: "Global Payments Corp", traderId: "T1" },
@@ -35,6 +36,7 @@ export default function TraderLogin() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Navbar />
       <div className="flex-1 flex items-center justify-center p-4">
         <Card className="w-full max-w-md animate-fade-in shadow-xl border-primary/10">
           <CardHeader className="text-center space-y-3">

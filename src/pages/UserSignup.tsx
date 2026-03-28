@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { UserPlus, Fingerprint, Monitor, Globe, Maximize } from "lucide-react";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 import { generateDeviceId, getDeviceInfo } from "@/lib/deviceId";
 
 export default function UserSignup() {

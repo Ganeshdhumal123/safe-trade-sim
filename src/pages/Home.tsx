@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Shield, ShieldCheck, Activity, UserPlus, ArrowRight, Zap, Lock, BarChart3 } from "lucide-react";
 import { motion } from "framer-motion";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 const features = [
   {
@@ -50,28 +51,7 @@ const scaleIn = {
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-background overflow-x-hidden">
-      {/* Nav */}
-      <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto flex items-center justify-between h-16 px-4">
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-              <Shield className="w-5 h-5 text-primary" />
-            </div>
-            <span className="font-bold text-lg text-foreground">SafeTrade</span>
-          </Link>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/user-login">User Login</Link>
-            </Button>
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/trader-login">Trader Login</Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link to="/admin-login">Admin Login</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Hero */}
       <section className="flex-1 flex items-center relative">

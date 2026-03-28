@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { Briefcase } from "lucide-react";
 import { getTraders } from "@/lib/banking";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 import ProfileDropdown from "@/components/ProfileDropdown";
 
 export default function TraderDashboard() {
@@ -23,16 +23,12 @@ export default function TraderDashboard() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto flex items-center justify-between h-16 px-4">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Briefcase className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="font-bold text-lg leading-tight">Trader Dashboard</h1>
-              <p className="text-xs text-muted-foreground">Manage your trader account</p>
-            </div>
+      <Navbar />
+      <header className="border-b bg-card/60">
+        <div className="container mx-auto flex items-center justify-between h-14 px-4">
+          <div>
+            <h1 className="font-bold text-lg leading-tight">Trader Dashboard</h1>
+            <p className="text-xs text-muted-foreground">Manage your trader account</p>
           </div>
           <ProfileDropdown onLogout={handleLogout} />
         </div>

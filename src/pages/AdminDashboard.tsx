@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "@/lib/banking";
-import { Shield } from "lucide-react";
 import ProfileDropdown from "@/components/ProfileDropdown";
+import Navbar from "@/components/Navbar";
 import TraderCheckPanel from "@/components/TraderCheckPanel";
 import TransactionPanel from "@/components/TransactionPanel";
 import TraderDirectory from "@/components/TraderDirectory";
@@ -21,16 +21,12 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto flex items-center justify-between h-16 px-4">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="font-bold text-lg leading-tight">Admin Dashboard</h1>
-              <p className="text-xs text-muted-foreground">Banking Fraud Prevention — Full Access</p>
-            </div>
+      <Navbar />
+      <header className="border-b bg-card/60">
+        <div className="container mx-auto flex items-center justify-between h-14 px-4">
+          <div>
+            <h1 className="font-bold text-lg leading-tight">Admin Dashboard</h1>
+            <p className="text-xs text-muted-foreground">Banking Fraud Prevention — Full Access</p>
           </div>
           <ProfileDropdown onLogout={handleLogout} />
         </div>

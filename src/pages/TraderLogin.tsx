@@ -23,24 +23,29 @@ export default function TraderLogin() {
   const deviceInfo = getDeviceInfo();
 
   const handleLogin = () => {
-    const trader = DEMO_TRADERS.find(t => t.email === email && t.password === password);
-    if (!trader) {
-      setMessage({ text: "Invalid email or password.", type: "error" });
-      return;
-    }
-    // Check registered traders for device ID match
+    // Check demo traders first
+    const demoTrader = DEMO_TRADERS.find(t => t.email === email && t.password === password);
+    
+    // Check registered traders (created via admin registration)
     const registeredTraders = JSON.parse(localStorage.getItem("registered_traders") || "[]");
-    const registeredTrader = registeredTraders.find((t: any) => t.email === email);
-    if (registeredTrader && registeredTrader.deviceId !== currentDeviceId) {
-      setMessage({ text: "Unrecognized device. Please login from your registered device.", type: "error" });
+    const regTrader = registeredTraders.find((t: any) =>
+      (t.email === email || t.username === email) && t.password === password
+    );
+
+    if (!demoTrader && !regTrader) {
+      setMessage({ text: "Invalid email/username or password.", type: "error" });
       return;
     }
+
+    const traderName = demoTrader?.name || regTrader?.name;
+    const traderId = demoTrader?.traderId || regTrader?.traderId;
+
     localStorage.setItem("logged_in", "true");
     localStorage.setItem("user_role", "trader");
-    localStorage.setItem("user_name", trader.name);
-    localStorage.setItem("user_email", email);
-    localStorage.setItem("trader_id", trader.traderId);
-    setMessage({ text: `Welcome, ${trader.name}!`, type: "success" });
+    localStorage.setItem("user_name", traderName);
+    localStorage.setItem("user_email", demoTrader?.email || regTrader?.email);
+    localStorage.setItem("trader_id", traderId);
+    setMessage({ text: `Welcome, ${traderName}!`, type: "success" });
     setTimeout(() => navigate("/trader-dashboard"), 800);
   };
 

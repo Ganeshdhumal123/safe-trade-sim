@@ -11,7 +11,7 @@ interface TraderRegistrationProps {
   onRegistered?: () => void;
 }
 
-type Step = "form" | "otp";
+type Step = "form" | "otp" | "credentials";
 
 export default function TraderRegistration({ onRegistered }: TraderRegistrationProps) {
   const [name, setName] = useState("");
@@ -75,9 +75,7 @@ export default function TraderRegistration({ onRegistered }: TraderRegistrationP
     const res = registerTrader(name, pan, aadhaar, bankAccount, ifsc, email);
     setResult(res);
     if (res.success) {
-      setName(""); setPan(""); setAadhaar(""); setBankAccount(""); setIfsc("");
-      setEmail(""); setEnteredOtp(""); setSentOtp("");
-      setStep("form");
+      setStep("credentials");
       onRegistered?.();
     }
   };
@@ -94,7 +92,9 @@ export default function TraderRegistration({ onRegistered }: TraderRegistrationP
             <CardDescription>
               {step === "form"
                 ? "Fill details & verify email via OTP"
-                : "Enter the OTP sent to your email"}
+                : step === "otp"
+                ? "Enter the OTP sent to your email"
+                : "Trader registered! Save these credentials."}
             </CardDescription>
           </div>
         </div>
@@ -176,32 +176,44 @@ export default function TraderRegistration({ onRegistered }: TraderRegistrationP
           </div>
         )}
 
-        {result && (
-          <div className={`p-4 rounded-xl animate-fade-in ${
-            result.success
-              ? "bg-success/10 border border-success/20"
-              : "bg-danger/10 border border-danger/20"
-          }`}>
+        {step === "credentials" && result?.success && result.credentials && (
+          <div className="space-y-4 animate-fade-in">
+            <div className="p-4 rounded-xl bg-success/10 border border-success/20">
+              <div className="flex items-start gap-2">
+                <CheckCircle2 className="h-5 w-5 text-success shrink-0 mt-0.5" />
+                <p className="font-semibold text-success">{result.message}</p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 space-y-3">
+              <p className="text-base font-semibold text-foreground">🔐 Trader Login Credentials</p>
+              <div className="grid gap-2 text-sm font-mono bg-background p-3 rounded-lg border">
+                <p><span className="text-muted-foreground">Username:</span> <span className="text-foreground font-bold">{result.credentials.username}</span></p>
+                <p><span className="text-muted-foreground">Password:</span> <span className="text-foreground font-bold">{result.credentials.password}</span></p>
+                <p><span className="text-muted-foreground">Email:</span> <span className="text-foreground font-bold">{result.credentials.email}</span></p>
+              </div>
+              <p className="text-xs text-destructive font-medium">⚠️ Save these credentials now — the password cannot be recovered later.</p>
+            </div>
+
+            <Button
+              onClick={() => {
+                setName(""); setPan(""); setAadhaar(""); setBankAccount(""); setIfsc("");
+                setEmail(""); setEnteredOtp(""); setSentOtp(""); setResult(null);
+                setStep("form");
+              }}
+              className="w-full"
+            >
+              Register Another Trader
+            </Button>
+          </div>
+        )}
+
+        {result && !result.success && (
+          <div className="p-4 rounded-xl animate-fade-in bg-danger/10 border border-danger/20">
             <div className="flex items-start gap-2">
-              {result.success
-                ? <CheckCircle2 className="h-5 w-5 text-success shrink-0 mt-0.5" />
-                : <XCircle className="h-5 w-5 text-danger shrink-0 mt-0.5" />
-              }
-              <div className="w-full">
-                <p className={`font-semibold ${result.success ? "text-success" : "text-danger"}`}>
-                  {result.message}
-                </p>
-                {result.credentials && (
-                  <div className="mt-3 p-3 rounded-lg bg-background border space-y-2">
-                    <p className="text-sm font-semibold text-foreground">🔐 Trader Login Credentials</p>
-                    <div className="grid gap-1 text-sm font-mono">
-                      <p><span className="text-muted-foreground">Username:</span> <span className="text-foreground font-bold">{result.credentials.username}</span></p>
-                      <p><span className="text-muted-foreground">Password:</span> <span className="text-foreground font-bold">{result.credentials.password}</span></p>
-                      <p><span className="text-muted-foreground">Email:</span> <span className="text-foreground font-bold">{result.credentials.email}</span></p>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1">⚠️ Save these credentials — they are needed for trader login.</p>
-                  </div>
-                )}
+              <XCircle className="h-5 w-5 text-danger shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold text-danger">{result.message}</p>
                 {result.errors && (
                   <ul className="mt-2 space-y-1 text-sm text-danger">
                     {result.errors.map((err, i) => (

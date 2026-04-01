@@ -92,7 +92,9 @@ export default function TraderRegistration({ onRegistered }: TraderRegistrationP
             <CardDescription>
               {step === "form"
                 ? "Fill details & verify email via OTP"
-                : "Enter the OTP sent to your email"}
+                : step === "otp"
+                ? "Enter the OTP sent to your email"
+                : "Trader registered! Save these credentials."}
             </CardDescription>
           </div>
         </div>

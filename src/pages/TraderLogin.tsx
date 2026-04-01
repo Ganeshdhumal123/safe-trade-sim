@@ -68,6 +68,15 @@ export default function TraderLogin() {
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="device" className="flex items-center gap-1.5">
+                <Fingerprint className="h-3.5 w-3.5" /> Device ID (Auto-detected)
+              </Label>
+              <Input id="device" value={currentDeviceId} readOnly className="font-mono text-sm bg-muted" />
+              <p className="text-xs text-muted-foreground">
+                {deviceInfo.os} · {deviceInfo.browser} · {deviceInfo.screen}
+              </p>
+            </div>
 
             {message && (
               <div className={`p-3 rounded-lg text-sm font-medium animate-fade-in ${

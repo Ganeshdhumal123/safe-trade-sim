@@ -107,6 +107,9 @@ export default function Home() {
             <Button size="lg" variant="outline" asChild className="hover:bg-accent transition-colors">
               <Link to="/user-login">User Portal</Link>
             </Button>
+            <Button size="lg" variant="outline" asChild className="hover:bg-accent transition-colors">
+              <Link to="/trader-login">Trader Login</Link>
+            </Button>
           </motion.div>
         </div>
       </section>

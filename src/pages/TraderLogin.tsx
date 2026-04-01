@@ -19,11 +19,20 @@ export default function TraderLogin() {
   const [email, setEmail] = useState("trader@bank.com");
   const [password, setPassword] = useState("trader1234");
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  const currentDeviceId = generateDeviceId();
+  const deviceInfo = getDeviceInfo();
 
   const handleLogin = () => {
     const trader = DEMO_TRADERS.find(t => t.email === email && t.password === password);
     if (!trader) {
       setMessage({ text: "Invalid email or password.", type: "error" });
+      return;
+    }
+    // Check registered traders for device ID match
+    const registeredTraders = JSON.parse(localStorage.getItem("registered_traders") || "[]");
+    const registeredTrader = registeredTraders.find((t: any) => t.email === email);
+    if (registeredTrader && registeredTrader.deviceId !== currentDeviceId) {
+      setMessage({ text: "Unrecognized device. Please login from your registered device.", type: "error" });
       return;
     }
     localStorage.setItem("logged_in", "true");

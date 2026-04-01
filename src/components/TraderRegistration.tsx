@@ -72,7 +72,7 @@ export default function TraderRegistration({ onRegistered }: TraderRegistrationP
     }
 
     setOtpError("");
-    const res = registerTrader(name, pan, aadhaar, bankAccount, ifsc);
+    const res = registerTrader(name, pan, aadhaar, bankAccount, ifsc, email);
     setResult(res);
     if (res.success) {
       setName(""); setPan(""); setAadhaar(""); setBankAccount(""); setIfsc("");
@@ -187,10 +187,21 @@ export default function TraderRegistration({ onRegistered }: TraderRegistrationP
                 ? <CheckCircle2 className="h-5 w-5 text-success shrink-0 mt-0.5" />
                 : <XCircle className="h-5 w-5 text-danger shrink-0 mt-0.5" />
               }
-              <div>
+              <div className="w-full">
                 <p className={`font-semibold ${result.success ? "text-success" : "text-danger"}`}>
                   {result.message}
                 </p>
+                {result.credentials && (
+                  <div className="mt-3 p-3 rounded-lg bg-background border space-y-2">
+                    <p className="text-sm font-semibold text-foreground">🔐 Trader Login Credentials</p>
+                    <div className="grid gap-1 text-sm font-mono">
+                      <p><span className="text-muted-foreground">Username:</span> <span className="text-foreground font-bold">{result.credentials.username}</span></p>
+                      <p><span className="text-muted-foreground">Password:</span> <span className="text-foreground font-bold">{result.credentials.password}</span></p>
+                      <p><span className="text-muted-foreground">Email:</span> <span className="text-foreground font-bold">{result.credentials.email}</span></p>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">⚠️ Save these credentials — they are needed for trader login.</p>
+                  </div>
+                )}
                 {result.errors && (
                   <ul className="mt-2 space-y-1 text-sm text-danger">
                     {result.errors.map((err, i) => (

@@ -64,6 +64,21 @@ export interface RegisterTraderResult {
   message: string;
   traderId?: string;
   errors?: string[];
+  credentials?: { username: string; password: string; email: string };
+}
+
+function generatePassword(length = 10): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789@#$!";
+  let pass = "";
+  for (let i = 0; i < length; i++) {
+    pass += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return pass;
+}
+
+function generateUsername(name: string, id: string): string {
+  const base = name.trim().toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 12);
+  return `${base}_${id.toLowerCase()}`;
 }
 
 export function registerTrader(
@@ -71,7 +86,8 @@ export function registerTrader(
   pan: string,
   aadhaar: string,
   bankAccount: string,
-  ifsc: string
+  ifsc: string,
+  email?: string
 ): RegisterTraderResult {
   const errors: string[] = [];
 
@@ -87,6 +103,8 @@ export function registerTrader(
 
   const traders = loadTraders();
   const nextId = `T${Object.keys(traders).length + 1}`;
+  const username = generateUsername(name, nextId);
+  const password = generatePassword();
 
   traders[nextId] = {
     name: name.trim(),
@@ -99,10 +117,22 @@ export function registerTrader(
 
   saveTraders(traders);
 
+  // Save trader credentials for login
+  const traderCreds = JSON.parse(localStorage.getItem("registered_traders") || "[]");
+  traderCreds.push({
+    email: email || `${username}@safetrade.com`,
+    username,
+    password,
+    traderId: nextId,
+    name: name.trim(),
+  });
+  localStorage.setItem("registered_traders", JSON.stringify(traderCreds));
+
   return {
     success: true,
     message: `✅ Trader "${name}" registered & verified as ${nextId}`,
     traderId: nextId,
+    credentials: { username, password, email: email || `${username}@safetrade.com` },
   };
 }
 

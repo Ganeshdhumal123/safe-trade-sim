@@ -11,6 +11,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import UserDashboard from "./pages/UserDashboard";
 import TraderLogin from "./pages/TraderLogin";
 import TraderDashboard from "./pages/TraderDashboard";
+import UserProfile from "./pages/UserProfile";
+import TraderProfile from "./pages/TraderProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +32,8 @@ const App = () => (
           <Route path="/user-dashboard" element={<UserDashboard />} />
           <Route path="/trader-login" element={<TraderLogin />} />
           <Route path="/trader-dashboard" element={<TraderDashboard />} />
+          <Route path="/user-profile" element={<UserProfile />} />
+          <Route path="/trader-profile" element={<TraderProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

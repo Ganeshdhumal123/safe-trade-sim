@@ -3,11 +3,11 @@ import { Shield, UserCircle, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/useTheme";
 
-function getDashboardPath(role: string | null) {
+function getProfilePath(role: string | null) {
   switch (role) {
     case "admin": return "/admin-dashboard";
-    case "trader": return "/trader-dashboard";
-    default: return "/user-dashboard";
+    case "trader": return "/trader-profile";
+    default: return "/user-profile";
   }
 }
 
@@ -32,7 +32,7 @@ export default function Navbar() {
           </Button>
           {isLoggedIn ? (
             <Button variant="default" size="sm" asChild className="gap-2">
-              <Link to={getDashboardPath(role)}>
+              <Link to={getProfilePath(role)}>
                 <UserCircle className="w-4 h-4" /> Go to Profile
               </Link>
             </Button>

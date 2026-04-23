@@ -22,8 +22,10 @@ Deno.serve(async (req) => {
       );
     }
 
-    const GMAIL_USER = Deno.env.get("GMAIL_USER");
-    const GMAIL_APP_PASSWORD = Deno.env.get("GMAIL_APP_PASSWORD");
+    const GMAIL_USER = Deno.env.get("GMAIL_USER")?.trim();
+    // Gmail app passwords are shown with spaces (e.g. "abcd efgh ijkl mnop")
+    // but must be sent without spaces during SMTP auth.
+    const GMAIL_APP_PASSWORD = Deno.env.get("GMAIL_APP_PASSWORD")?.replace(/\s+/g, "");
 
     if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
       console.error("Missing Gmail credentials");

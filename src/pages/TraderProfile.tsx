@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeft, Camera, Mail, IdCard, Shield, Smartphone, Briefcase, CreditCard, Building2 } from "lucide-react";
-import { getTraders } from "@/lib/banking";
+import { ArrowLeft, Camera, Mail, IdCard, Shield, Smartphone, Briefcase, CreditCard, Building2, LogOut } from "lucide-react";
+import { getTraders, logout } from "@/lib/banking";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -19,6 +19,15 @@ export default function TraderProfile() {
   const deviceId = localStorage.getItem("device_id") || "—";
   const traders = getTraders();
   const trader = traders[traderId];
+
+  const handleSignOut = () => {
+    logout();
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("user_email");
+    localStorage.removeItem("user_role");
+    localStorage.removeItem("trader_id");
+    navigate("/");
+  };
 
   const [avatar, setAvatar] = useState<string | null>(
     localStorage.getItem("trader_avatar")
@@ -104,6 +113,14 @@ export default function TraderProfile() {
                 <InfoRow icon={Building2} label="IFSC" value={trader.ifsc || "N/A"} />
               </>
             )}
+
+            <Button
+              variant="destructive"
+              className="w-full gap-2 mt-4"
+              onClick={handleSignOut}
+            >
+              <LogOut className="w-4 h-4" /> Sign Out
+            </Button>
           </CardContent>
         </Card>
       </main>

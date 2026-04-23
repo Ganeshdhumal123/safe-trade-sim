@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeft, Camera, Mail, IdCard, Shield, Smartphone } from "lucide-react";
+import { ArrowLeft, Camera, Mail, IdCard, Shield, Smartphone, LogOut } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { logout } from "@/lib/banking";
 
 export default function UserProfile() {
   const navigate = useNavigate();
@@ -15,6 +16,14 @@ export default function UserProfile() {
   const email = localStorage.getItem("user_email") || "—";
   const role = localStorage.getItem("user_role") || "user";
   const deviceId = localStorage.getItem("device_id") || "—";
+
+  const handleSignOut = () => {
+    logout();
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("user_email");
+    localStorage.removeItem("user_role");
+    navigate("/");
+  };
 
   const [avatar, setAvatar] = useState<string | null>(
     localStorage.getItem("user_avatar")
@@ -86,6 +95,14 @@ export default function UserProfile() {
             <InfoRow icon={IdCard} label="Role" value={role.charAt(0).toUpperCase() + role.slice(1)} />
             <InfoRow icon={Shield} label="Account Status" value="Active" />
             <InfoRow icon={Smartphone} label="Device ID" value={deviceId} />
+
+            <Button
+              variant="destructive"
+              className="w-full gap-2 mt-4"
+              onClick={handleSignOut}
+            >
+              <LogOut className="w-4 h-4" /> Sign Out
+            </Button>
           </CardContent>
         </Card>
       </main>

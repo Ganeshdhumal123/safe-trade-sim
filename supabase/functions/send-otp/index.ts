@@ -49,8 +49,8 @@ Deno.serve(async (req) => {
         port: 465,
         tls: true,
         auth: {
-          username: GMAIL_USER,
-          password: GMAIL_APP_PASSWORD,
+          username: ganeshdhumal9356@gmail.com,
+          password: zyvqetinfmmzodow,
         },
       },
     });

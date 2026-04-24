@@ -32,6 +32,16 @@ export default function UserDashboard() {
 
   const handleTransaction = (transaction: Investment) => {
     setInvestments(prev => [...prev, transaction]);
+
+    // Append to global trader ledger so traders can see their investors
+    const userEmail = localStorage.getItem("user_email") || "";
+    const ledger = JSON.parse(localStorage.getItem("trader_ledger") || "[]");
+    ledger.push({
+      ...transaction,
+      investorName: userName,
+      investorEmail: userEmail,
+    });
+    localStorage.setItem("trader_ledger", JSON.stringify(ledger));
   };
 
   const handleLogout = () => {

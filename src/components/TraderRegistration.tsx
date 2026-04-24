@@ -4,14 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { registerTrader, RegisterTraderResult } from "@/lib/banking";
-import { UserPlus, CheckCircle2, XCircle, Mail, ShieldCheck, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { UserPlus, CheckCircle2, XCircle, ShieldCheck } from "lucide-react";
 
 interface TraderRegistrationProps {
   onRegistered?: () => void;
 }
 
-type Step = "form" | "otp" | "credentials";
+type Step = "form" | "credentials";
 
 export default function TraderRegistration({ onRegistered }: TraderRegistrationProps) {
   const [name, setName] = useState("");
@@ -21,15 +20,10 @@ export default function TraderRegistration({ onRegistered }: TraderRegistrationP
   const [ifsc, setIfsc] = useState("");
   const [email, setEmail] = useState("");
   const [result, setResult] = useState<RegisterTraderResult | null>(null);
-
   const [step, setStep] = useState<Step>("form");
-  const [sentOtp, setSentOtp] = useState("");
-  const [enteredOtp, setEnteredOtp] = useState("");
-  const [otpError, setOtpError] = useState("");
-  const [sending, setSending] = useState(false);
 
-  const handleSendOtp = async () => {
-    // Basic client-side validation first
+  const handleRegister = () => {
+    // Basic client-side validation
     const errors: string[] = [];
     if (!name.trim()) errors.push("Trader name is required");
     if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) errors.push("Valid email is required");
@@ -43,41 +37,18 @@ export default function TraderRegistration({ onRegistered }: TraderRegistrationP
       return;
     }
 
-    setResult(null);
-    setSending(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("send-otp", {
-        body: { email },
-      });
-
-      if (error || !data?.success) {
-        setResult({ success: false, message: data?.message || "Failed to send OTP. Check email configuration." });
-        return;
-      }
-
-      setSentOtp(data.otp);
-      setStep("otp");
-      setOtpError("");
-    } catch {
-      setResult({ success: false, message: "Network error sending OTP." });
-    } finally {
-      setSending(false);
-    }
-  };
-
-  const handleVerifyOtp = () => {
-    if (enteredOtp !== sentOtp) {
-      setOtpError("Invalid OTP. Please try again.");
-      return;
-    }
-
-    setOtpError("");
     const res = registerTrader(name, pan, aadhaar, bankAccount, ifsc, email);
     setResult(res);
     if (res.success) {
       setStep("credentials");
       onRegistered?.();
     }
+  };
+
+  const resetForm = () => {
+    setName(""); setPan(""); setAadhaar(""); setBankAccount(""); setIfsc("");
+    setEmail(""); setResult(null);
+    setStep("form");
   };
 
   return (
@@ -91,9 +62,7 @@ export default function TraderRegistration({ onRegistered }: TraderRegistrationP
             <CardTitle>Register New Trader</CardTitle>
             <CardDescription>
               {step === "form"
-                ? "Fill details & verify email via OTP"
-                : step === "otp"
-                ? "Enter the OTP sent to your email"
+                ? "Fill trader details to register instantly"
                 : "Trader registered! Save these credentials."}
             </CardDescription>
           </div>
@@ -129,51 +98,10 @@ export default function TraderRegistration({ onRegistered }: TraderRegistrationP
               </div>
             </div>
 
-            <Button onClick={handleSendOtp} className="w-full gap-2" disabled={sending}>
-              {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
-              {sending ? "Sending OTP..." : "Send OTP & Verify Email"}
+            <Button onClick={handleRegister} className="w-full gap-2">
+              <ShieldCheck className="h-4 w-4" /> Register Trader
             </Button>
           </>
-        )}
-
-        {step === "otp" && (
-          <div className="space-y-4">
-            <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 text-center">
-              <Mail className="h-8 w-8 text-primary mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">
-                OTP sent to <span className="font-semibold text-foreground">{email}</span>
-              </p>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="otp-input">Enter 4-digit OTP</Label>
-              <Input
-                id="otp-input"
-                placeholder="1234"
-                value={enteredOtp}
-                onChange={e => setEnteredOtp(e.target.value.replace(/\D/g, ""))}
-                maxLength={4}
-                className="font-mono text-center text-2xl tracking-[0.5em]"
-              />
-            </div>
-
-            {otpError && (
-              <p className="text-sm text-destructive font-medium">{otpError}</p>
-            )}
-
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={() => { setStep("form"); setEnteredOtp(""); setOtpError(""); }} className="flex-1">
-                Back
-              </Button>
-              <Button onClick={handleVerifyOtp} className="flex-1 gap-2" disabled={enteredOtp.length !== 4}>
-                <ShieldCheck className="h-4 w-4" /> Verify & Register
-              </Button>
-            </div>
-
-            <Button variant="ghost" size="sm" onClick={handleSendOtp} disabled={sending} className="w-full text-muted-foreground">
-              {sending ? "Resending..." : "Resend OTP"}
-            </Button>
-          </div>
         )}
 
         {step === "credentials" && result?.success && result.credentials && (
@@ -191,18 +119,12 @@ export default function TraderRegistration({ onRegistered }: TraderRegistrationP
                 <p><span className="text-muted-foreground">Username:</span> <span className="text-foreground font-bold">{result.credentials.username}</span></p>
                 <p><span className="text-muted-foreground">Password:</span> <span className="text-foreground font-bold">{result.credentials.password}</span></p>
                 <p><span className="text-muted-foreground">Email:</span> <span className="text-foreground font-bold">{result.credentials.email}</span></p>
+                <p><span className="text-muted-foreground">Trader ID:</span> <span className="text-foreground font-bold">{result.traderId}</span></p>
               </div>
-              <p className="text-xs text-destructive font-medium">⚠️ Save these credentials now — the password cannot be recovered later.</p>
+              <p className="text-xs text-destructive font-medium">⚠️ Save these credentials now — share the Trader ID with investors so they can invest.</p>
             </div>
 
-            <Button
-              onClick={() => {
-                setName(""); setPan(""); setAadhaar(""); setBankAccount(""); setIfsc("");
-                setEmail(""); setEnteredOtp(""); setSentOtp(""); setResult(null);
-                setStep("form");
-              }}
-              className="w-full"
-            >
+            <Button onClick={resetForm} className="w-full">
               Register Another Trader
             </Button>
           </div>
